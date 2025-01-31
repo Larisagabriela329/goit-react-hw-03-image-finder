@@ -1,4 +1,3 @@
-// components/Modal.jsx
 import React, { useEffect } from "react";
 
 const Modal = ({ imageUrl, onClose }) => {

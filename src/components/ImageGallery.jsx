@@ -1,4 +1,3 @@
-// components/ImageGallery.jsx
 import React from "react";
 import ImageGalleryItem from "./ImageGalleryItem";
 

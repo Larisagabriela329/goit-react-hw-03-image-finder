@@ -1,4 +1,3 @@
-// components/ImageGalleryItem.jsx
 import React from "react";
 
 const ImageGalleryItem = ({ image, onImageClick }) => {

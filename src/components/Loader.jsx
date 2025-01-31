@@ -1,4 +1,3 @@
-// components/Loader.jsx
 import React from "react";
 import { InfinitySpin } from "react-loader-spinner";
 
