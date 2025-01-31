@@ -26,7 +26,7 @@ function Searchbar({ onSearch }) {
         value={query}
         onChange={handleInputChange}
         onKeyDown={handleKeyPress}
-        placeholder="Căutare imagini..."
+        placeholder="Search images..."
       />
       <button onClick={handleSearch}>Search</button>
     </div>
