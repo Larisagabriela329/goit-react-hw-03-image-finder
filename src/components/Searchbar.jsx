@@ -28,7 +28,7 @@ function Searchbar({ onSearch }) {
         onKeyDown={handleKeyPress}
         placeholder="Căutare imagini..."
       />
-      <button onClick={handleSearch}>Căutare</button>
+      <button onClick={handleSearch}>Search</button>
     </div>
   );
 }
