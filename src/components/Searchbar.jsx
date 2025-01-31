@@ -1,40 +1,36 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const Searchbar = ({ onSubmit }) => {
-  const [query, setQuery] = useState("");
+function Searchbar({ onSearch }) {
+  const [query, setQuery] = useState('');
 
-  const handleChange = (e) => {
-    setQuery(e.target.value);
+  const handleInputChange = (event) => {
+    setQuery(event.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (query.trim() === "") {
-      alert("Enter a search term!");
-      return;
+  const handleSearch = () => {
+    if (query.trim() !== '') {
+      onSearch(query);
     }
-    onSubmit(query);
-    setQuery("");
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && query.trim() !== '') {
+      onSearch(query);
+    }
   };
 
   return (
-    <header className="searchbar">
-      <form className="form" onSubmit={handleSubmit}>
-        <button type="submit" className="button">
-          <span className="button-label">Search</span>
-        </button>
-        <input
-          className="input"
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-          value={query}
-          onChange={handleChange}
-        />
-      </form>
-    </header>
+    <div className="search-container">
+      <input
+        type="text"
+        value={query}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyPress}
+        placeholder="Căutare imagini..."
+      />
+      <button onClick={handleSearch}>Căutare</button>
+    </div>
   );
-};
+}
 
 export default Searchbar;

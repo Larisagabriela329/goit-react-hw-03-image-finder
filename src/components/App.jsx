@@ -44,7 +44,7 @@ const App = () => {
 
   return (
     <div>
-      <Searchbar onSubmit={handleSearch} />
+      <Searchbar onSearch={handleSearch} />
       {loading && <Loader />}
       <ImageGallery images={images} onImageClick={setSelectedImage} />
       {images.length > 0 && <Button onClick={() => setPage(page + 1)} />}
