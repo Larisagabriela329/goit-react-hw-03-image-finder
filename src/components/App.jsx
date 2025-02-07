@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { Component } from "react";
 import Searchbar from "./Searchbar";
 import ImageGallery from "./ImageGallery";
 import Button from "./Button";
@@ -8,49 +8,72 @@ import Modal from "./Modal";
 const API_KEY = "47390625-19a19a63281485c70e805310c";
 const BASE_URL = "https://pixabay.com/api/";
 
-const App = () => {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  useEffect(() => {
-    if (!query) return;
-
-    const fetchImages = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-        );
-        const data = await response.json();
-        setImages((prevImages) => (page === 1 ? data.hits : [...prevImages, ...data.hits]));
-      } catch (error) {
-        console.error("Error fetching images:", error);
-      } finally {
-        setLoading(false);
-      }
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      images: [],
+      query: "",
+      page: 1,
+      loading: false,
+      selectedImage: null,
     };
+  }
 
-    fetchImages();
-  }, [query, page]);
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
+      this.fetchImages();
+    }
+  }
 
-  const handleSearch = (newQuery) => {
-    setQuery(newQuery);
-    setPage(1);
-    setImages([]);
+  fetchImages = async () => {
+    const { query, page } = this.state;
+    if (!query) return;
+    
+    this.setState({ loading: true });
+    try {
+      const response = await fetch(
+        `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+      );
+      const data = await response.json();
+      this.setState((prevState) => ({
+        images: page === 1 ? data.hits : [...prevState.images, ...data.hits],
+      }));
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    } finally {
+      this.setState({ loading: false });
+    }
   };
 
-  return (
-    <div>
-      <Searchbar onSearch={handleSearch} />
-      {loading && <Loader />}
-      <ImageGallery images={images} onImageClick={setSelectedImage} />
-      {images.length > 0 && <Button onClick={() => setPage(page + 1)} />}
-      {selectedImage && <Modal imageUrl={selectedImage} onClose={() => setSelectedImage(null)} />}
-    </div>
-  );
-};
+  handleSearch = (newQuery) => {
+    this.setState({ query: newQuery, page: 1, images: [] });
+  };
+
+  handleLoadMore = () => {
+    this.setState((prevState) => ({ page: prevState.page + 1 }));
+  };
+
+  handleImageClick = (imageUrl) => {
+    this.setState({ selectedImage: imageUrl });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ selectedImage: null });
+  };
+
+  render() {
+    const { images, loading, selectedImage } = this.state;
+    return (
+      <div>
+        <Searchbar onSearch={this.handleSearch} />
+        {loading && <Loader />}
+        <ImageGallery images={images} onImageClick={this.handleImageClick} />
+        {images.length > 0 && <Button onClick={this.handleLoadMore} />}
+        {selectedImage && <Modal imageUrl={selectedImage} onClose={this.handleCloseModal} />}
+      </div>
+    );
+  }
+}
 
 export default App;

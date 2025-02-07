@@ -1,36 +1,43 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
-function Searchbar({ onSearch }) {
-  const [query, setQuery] = useState('');
+class Searchbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: '',
+    };
+  }
 
-  const handleInputChange = (event) => {
-    setQuery(event.target.value);
+  handleInputChange = (event) => {
+    this.setState({ query: event.target.value });
   };
 
-  const handleSearch = () => {
-    if (query.trim() !== '') {
-      onSearch(query);
+  handleSearch = () => {
+    if (this.state.query.trim() !== '') {
+      this.props.onSearch(this.state.query);
     }
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter' && query.trim() !== '') {
-      onSearch(query);
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter' && this.state.query.trim() !== '') {
+      this.props.onSearch(this.state.query);
     }
   };
 
-  return (
-    <div className="search-container">
-      <input
-        type="text"
-        value={query}
-        onChange={handleInputChange}
-        onKeyDown={handleKeyPress}
-        placeholder="Search images..."
-      />
-      <button onClick={handleSearch}>Search</button>
-    </div>
-  );
+  render() {
+    return (
+      <div className="search-container">
+        <input
+          type="text"
+          value={this.state.query}
+          onChange={this.handleInputChange}
+          onKeyDown={this.handleKeyPress}
+          placeholder="Search images..."
+        />
+        <button onClick={this.handleSearch}>Search</button>
+      </div>
+    );
+  }
 }
 
 export default Searchbar;
